@@ -1,20 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar'; 
+import React from 'react'; 
+import { View } from 'react-native'; 
+import Campobase from './componentes/CampobaseComponent'; 
+import { SafeAreaProvider } from 'react-native-safe-area-context'; 
+export default function App() { 
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Primer commit y fondo en color verde</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#98ff98', //Color verde claro
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return( 
+    <SafeAreaProvider> 
+    <View> 
+    <Campobase/> 
+    <StatusBar style="auto" /> 
+    </View> 
+    </SafeAreaProvider> 
+  ); 
+  
+} 
