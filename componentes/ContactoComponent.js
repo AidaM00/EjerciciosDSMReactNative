@@ -6,7 +6,7 @@ class Contacto extends Component {
   render() {
     return (
       <Card>
-        <Card.Title style={{ textAlign: 'center', fontWeight: 'bold' }}>
+        <Card.Title style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>
           Información de contacto
         </Card.Title>
         <Card.Divider />

@@ -7,7 +7,7 @@ import { ACTIVIDADES } from '../comun/actividades';
 function Historia() {
   return (
     <Card>
-      <Card.Title style={{ color: 'black', textAlign: 'center' }}>
+      <Card.Title style={{ color: 'black', fontSize: 20, textAlign: 'center' }}>
         Un poquito de historia
       </Card.Title>
       <Card.Divider />
@@ -51,7 +51,7 @@ class QuienesSomos extends Component {
       <ScrollView>
         <Historia />
         <Card>
-          <Card.Title style={{ color: 'black', textAlign: 'center' }}>
+          <Card.Title style={{ color: 'black', fontSize: 20, textAlign: 'center' }}>
             "Actividades y recursos"
           </Card.Title>
           <Card.Divider />
