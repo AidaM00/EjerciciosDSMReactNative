@@ -11,6 +11,7 @@ import DetalleExcursion from './DetalleExcursionComponent';
 import Home from './HomeComponent';
 import QuienesSomos from './QuienesSomosComponent';
 import Contacto from './ContactoComponent';
+import { colorGaztaroaClaro, colorGaztaroaOscuro } from '../comun/comun';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -37,7 +38,7 @@ function CalendarioNavegador() {
   return (
     <Stack.Navigator screenOptions={{
       headerTintColor: '#fff',
-      headerStyle: { backgroundColor: '#015afc' },
+      headerStyle: { backgroundColor: colorGaztaroaOscuro },
       headerTitleStyle: { color: '#fff' },
     }}>
       <Stack.Screen
@@ -72,7 +73,7 @@ function HomeNavegador() {
     <Stack.Navigator
       screenOptions={{
       headerTintColor: '#fff',
-      headerStyle: { backgroundColor: '#015afc' },
+      headerStyle: { backgroundColor: colorGaztaroaOscuro },
       headerTitleStyle: { color: '#fff' },
     }}>
       <Stack.Screen
@@ -99,7 +100,7 @@ function QuienesSomosNavegador() {
   return (
     <Stack.Navigator screenOptions={{
       headerTintColor: '#fff',
-      headerStyle: { backgroundColor: '#015afc' },
+      headerStyle: { backgroundColor: colorGaztaroaOscuro },
       headerTitleStyle: { color: '#fff' },
     }}>
       <Stack.Screen
@@ -119,7 +120,7 @@ function ContactoNavegador() {
   return (
     <Stack.Navigator screenOptions={{
       headerTintColor: '#fff',
-      headerStyle: { backgroundColor: '#015afc' },
+      headerStyle: { backgroundColor: colorGaztaroaOscuro },
       headerTitleStyle: { color: '#fff' },
     }}>
       <Stack.Screen
@@ -149,7 +150,7 @@ function DrawerNavegador() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerStyle: { backgroundColor: '#c2d3da' },
+        drawerStyle: { backgroundColor: colorGaztaroaClaro },
       }}
     >
       <Drawer.Screen
@@ -184,7 +185,7 @@ function DrawerNavegador() {
         component={ContactoNavegador}
         options={{
           drawerIcon: ({ tintColor }) => (
-            <Icon name="address-card" type="font-awesome" size={22} color={tintColor} />
+            <Icon name="address-card" type="font-awesome" size={24} color={tintColor} />
           )
         }}
       />
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     flex: 1, 
   }, 
   drawerHeader: { 
-    backgroundColor: '#015afc', 
+    backgroundColor: colorGaztaroaOscuro, 
     height: 100, 
     alignItems: 'center', 
     justifyContent: 'center', 

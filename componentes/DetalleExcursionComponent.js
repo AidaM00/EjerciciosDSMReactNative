@@ -3,6 +3,7 @@ import { Text, View, ScrollView, FlatList } from 'react-native';
 import { Card, Icon } from '@rneui/themed'; 
 import { EXCURSIONES } from '../comun/excursiones';
 import { COMENTARIOS } from '../comun/comentarios'; 
+import { baseUrl } from '../comun/comun';
 
 function RenderExcursion(props) {
   const { excursion } = props;
@@ -10,7 +11,7 @@ function RenderExcursion(props) {
   if (excursion != null) {
     return (
       <Card>
-        <Card.Image source={require('./imagenes/40Años.png')}>
+        <Card.Image source={{uri: baseUrl + excursion.imagen}}> 
           <View style={{
             flex: 1,
             justifyContent: 'center',
@@ -18,7 +19,7 @@ function RenderExcursion(props) {
             height: 120
           }}>
             <Text style={{
-              color: 'chocolate',
+              color: 'white',
               fontSize: 40,
               fontWeight: 'bold',
               textAlign: 'center',
@@ -63,13 +64,13 @@ function RenderComentario(props) {
         <Text style={{ fontSize: 14 }}>{item.valoracion} Stars</Text>
         { !isNaN(fecha) && (
           <Text style={{ fontSize: 12 }}>
-            -- {item.autor}, {' '}
+            -- {item.autor}, {''}
             {new Intl.DateTimeFormat('es-ES', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
               day: '2-digit'
-            }).format(fecha)}, {' '}
+            }).format(fecha)}, {''}
             {fecha.toLocaleTimeString('es-ES', {
               hour: '2-digit',
               minute: '2-digit',
@@ -83,7 +84,7 @@ function RenderComentario(props) {
 
   return (
     <Card>
-      <Card.Title>Comentarios</Card.Title>
+      <Card.Title style={{ fontSize: 20, textAlign: 'center' }}>Comentarios</Card.Title>
       <Card.Divider />
       <FlatList
         data={comentarios}

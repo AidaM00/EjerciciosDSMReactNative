@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { FlatList, Text, ScrollView } from 'react-native';
 import { Card, ListItem, Avatar } from '@rneui/themed';
 import { ACTIVIDADES } from '../comun/actividades';
+import { baseUrl } from '../comun/comun'; 
 
 // Componente funcional: historia del club
 function Historia() {
@@ -39,7 +40,7 @@ class QuienesSomos extends Component {
   render() {
     const renderActividadItem = ({ item, index }) => (
       <ListItem key={index} bottomDivider>
-        <Avatar source={require('./imagenes/40Años.png')} />
+        <Avatar source={{ uri: baseUrl + item.imagen }} />
         <ListItem.Content>
           <ListItem.Title style={{ color: 'black' }}>{item.nombre}</ListItem.Title>
           <ListItem.Subtitle>{item.descripcion}</ListItem.Subtitle>
