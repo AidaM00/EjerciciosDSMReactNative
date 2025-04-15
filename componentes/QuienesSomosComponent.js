@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { FlatList, Text, ScrollView } from 'react-native';
 import { Card, ListItem, Avatar } from '@rneui/themed';
-import { ACTIVIDADES } from '../comun/actividades';
-import { baseUrl } from '../comun/comun'; 
+import { connect } from 'react-redux'; 
+import { baseUrl } from '../comun/comun';
 
 // Componente funcional: historia del club
 function Historia() {
@@ -30,13 +30,6 @@ function Historia() {
 
 // Componente de clase: lista de actividades
 class QuienesSomos extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      actividades: ACTIVIDADES
-    };
-  }
-
   render() {
     const renderActividadItem = ({ item, index }) => (
       <ListItem key={index} bottomDivider>
@@ -57,7 +50,7 @@ class QuienesSomos extends Component {
           </Card.Title>
           <Card.Divider />
           <FlatList
-            data={this.state.actividades}
+            data={this.props.actividades.actividades} 
             renderItem={renderActividadItem}
             keyExtractor={(item) => item.id.toString()}
             scrollEnabled={false}
@@ -68,4 +61,10 @@ class QuienesSomos extends Component {
   }
 }
 
-export default QuienesSomos;
+const mapStateToProps = state => {
+  return {
+    actividades: state.actividades
+  };
+};
+
+export default connect(mapStateToProps)(QuienesSomos);

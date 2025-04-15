@@ -11,7 +11,7 @@ function RenderExcursion(props) {
   if (excursion != null) {
     return (
       <Card>
-        <Card.Image source={{uri: baseUrl + excursion.imagen}}> 
+        <Card.Image source={{ uri: baseUrl + excursion.imagen }}>
           <View style={{
             flex: 1,
             justifyContent: 'center',
@@ -38,10 +38,14 @@ function RenderExcursion(props) {
           <Icon
             raised
             reverse
-            name={ props.favorita ? 'heart' : 'heart-o'}
+            name={props.favorita ? 'heart' : 'heart-o'}
             type='font-awesome'
             color='#f50'
-            onPress={() => props.favorita ? console.log('La excursión ya se encuentra entre las favoritas') : props.onPress()} 
+            onPress={() =>
+              props.favorita
+                ? console.log('La excursión ya se encuentra entre las favoritas')
+                : props.onPress()
+            }
           />
         </View>
       </Card>
@@ -55,22 +59,22 @@ function RenderComentario(props) {
   const comentarios = props.comentarios;
 
   const renderItem = ({ item }) => {
-    const fechaCruda = item.dia.replace(/\s+/g, ''); // Elimina espacios para poner bien fecha y hora
+    const fechaCruda = item.dia.replace(/\s+/g, '');
     const fecha = new Date(fechaCruda);
 
     return (
       <View style={{ margin: 10 }}>
-        <Text style={{ fontSize: 14 }}>{item.comentario}</Text> 
+        <Text style={{ fontSize: 14 }}>{item.comentario}</Text>
         <Text style={{ fontSize: 14 }}>{item.valoracion} Stars</Text>
-        { !isNaN(fecha) && (
+        {!isNaN(fecha) && (
           <Text style={{ fontSize: 12 }}>
-            -- {item.autor}, {''}
+            -- {item.autor},
             {new Intl.DateTimeFormat('es-ES', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
               day: '2-digit'
-            }).format(fecha)}, {''}
+            }).format(fecha)},
             {fecha.toLocaleTimeString('es-ES', {
               hour: '2-digit',
               minute: '2-digit',
@@ -90,7 +94,7 @@ function RenderComentario(props) {
         data={comentarios}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
-        scrollEnabled={false} // Evitar conflictos con ScrollView
+        scrollEnabled={false}
       />
     </Card>
   );
@@ -100,28 +104,29 @@ class DetalleExcursion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      excursiones: EXCURSIONES,
-      comentarios: COMENTARIOS,
-      favoritos: [] // Estado para favoritos
+      favoritos: []
     };
   }
 
-  marcarFavorito(excursionId) { 
-    this.setState({favoritos: this.state.favoritos.concat(excursionId)}); 
+  marcarFavorito(excursionId) {
+    this.setState({ favoritos: this.state.favoritos.concat(excursionId) });
   }
 
   render() {
-    const {excursionId} = this.props.route.params;
+    const { excursionId } = this.props.route.params;
+    const excursion = EXCURSIONES[+excursionId];
+    const comentariosFiltrados = COMENTARIOS.filter(
+      comentario => comentario.excursionId === excursionId
+    );
+
     return (
       <ScrollView>
         <RenderExcursion
-          excursion={this.state.excursiones[+excursionId]}
-          favorita={this.state.favoritos.some(el => el === excursionId)} 
+          excursion={excursion}
+          favorita={this.state.favoritos.includes(excursionId)}
           onPress={() => this.marcarFavorito(excursionId)}
         />
-        <RenderComentario
-          comentarios={this.state.comentarios.filter(comentario => comentario.excursionId === excursionId)}
-        />
+        <RenderComentario comentarios={comentariosFiltrados} />
       </ScrollView>
     );
   }
