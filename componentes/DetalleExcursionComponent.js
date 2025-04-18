@@ -4,6 +4,8 @@ import { Card, Icon } from '@rneui/themed';
 import { EXCURSIONES } from '../comun/excursiones';
 import { COMENTARIOS } from '../comun/comentarios'; 
 import { baseUrl } from '../comun/comun';
+import { connect } from 'react-redux';
+import { postFavorito } from '../redux/ActionCreators';
 
 function RenderExcursion(props) {
   const { excursion } = props;
@@ -101,15 +103,9 @@ function RenderComentario(props) {
 }
 
 class DetalleExcursion extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      favoritos: []
-    };
-  }
 
   marcarFavorito(excursionId) {
-    this.setState({ favoritos: this.state.favoritos.concat(excursionId) });
+    this.props.postFavorito(excursionId);
   }
 
   render() {
@@ -122,8 +118,8 @@ class DetalleExcursion extends Component {
     return (
       <ScrollView>
         <RenderExcursion
-          excursion={excursion}
-          favorita={this.state.favoritos.includes(excursionId)}
+          excursion={this.props.excursiones.excursiones[+excursionId]}
+          favorita={this.props.favoritos.favoritos.some(el => el === excursionId)}
           onPress={() => this.marcarFavorito(excursionId)}
         />
         <RenderComentario comentarios={comentariosFiltrados} />
@@ -132,4 +128,16 @@ class DetalleExcursion extends Component {
   }
 }
 
-export default DetalleExcursion;
+const mapStateToProps = state => {
+  return {
+    excursiones: state.excursiones,
+    comentarios: state.comentarios,
+    favoritos: state.favoritos
+  };
+};
+
+const mapDispatchToProps = dispatch => ({ 
+  postFavorito: (excursionId) => dispatch(postFavorito(excursionId)) 
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetalleExcursion);

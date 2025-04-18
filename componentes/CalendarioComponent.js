@@ -3,6 +3,7 @@ import { ListItem, Avatar } from '@rneui/themed';
 import { SafeAreaView, FlatList } from 'react-native';
 import { connect } from 'react-redux'; 
 import { baseUrl } from '../comun/comun';
+import { IndicadorActividad } from './IndicadorActividadComponent';
 
 class Calendario extends Component {
   render() {
@@ -23,6 +24,15 @@ class Calendario extends Component {
         </ListItem>
       );
     };
+
+    // Mostrar loader o error
+    if (this.props.excursiones.isLoading) {
+      return <IndicadorActividad />;
+    }
+
+    if (this.props.excursiones.errMess) {
+      return <Text style={{ margin: 20 }}>{this.props.excursiones.errMess}</Text>;
+    }
 
     return (
       <SafeAreaView>

@@ -3,6 +3,7 @@ import { FlatList, Text, ScrollView } from 'react-native';
 import { Card, ListItem, Avatar } from '@rneui/themed';
 import { connect } from 'react-redux'; 
 import { baseUrl } from '../comun/comun';
+import { IndicadorActividad } from './IndicadorActividadComponent';
 
 // Componente funcional: historia del club
 function Historia() {
@@ -40,6 +41,36 @@ class QuienesSomos extends Component {
         </ListItem.Content>
       </ListItem>
     );
+
+    if (this.props.actividades.isLoading) {
+      return (
+        <ScrollView>
+          <Historia />
+          <Card>
+            <Card.Title style={{ color: 'black', fontSize: 20, textAlign: 'center' }}>
+              "Actividades y recursos"
+            </Card.Title>
+            <Card.Divider />
+            <IndicadorActividad />
+          </Card>
+        </ScrollView>
+      );
+    }
+
+    if (this.props.actividades.errMess) {
+      return (
+        <ScrollView>
+          <Historia />
+          <Card>
+            <Card.Title style={{ color: 'black', fontSize: 20, textAlign: 'center' }}>
+              "Actividades y recursos"
+            </Card.Title>
+            <Card.Divider />
+            <Text>{this.props.actividades.errMess}</Text>
+          </Card>
+        </ScrollView>
+      );
+    }
 
     return (
       <ScrollView>
