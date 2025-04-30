@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, FlatList } from 'react-native';
 import { Card, Icon } from '@rneui/themed'; 
 import { EXCURSIONES } from '../comun/excursiones';
-import { COMENTARIOS } from '../comun/comentarios'; 
 import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
-import { postFavorito } from '../redux/ActionCreators';
+import { postFavorito, postComentario } from '../redux/ActionCreators';
+import { colorGaztaroaOscuro } from '../comun/comun';
+import { Button, Input } from '@rneui/themed';
+import { Modal } from 'react-native'; 
+import { Rating } from 'react-native-ratings';
 
 function RenderExcursion(props) {
   const { excursion } = props;
@@ -32,11 +35,11 @@ function RenderExcursion(props) {
           </View>
         </Card.Image>
 
-        <Text style={{ margin: 20, textAlign: 'justify', fontSize: 14 }}>
+        <Text style={{ margin: 20, fontSize: 14 }}>
           {excursion.descripcion}
         </Text>
 
-        <View style={{ alignItems: 'flex-start', marginLeft: 10, marginBottom: 10 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           <Icon
             raised
             reverse
@@ -48,6 +51,14 @@ function RenderExcursion(props) {
                 ? console.log('La excursión ya se encuentra entre las favoritas')
                 : props.onPress()
             }
+          />
+          <Icon
+            raised
+            reverse
+            name='pencil'
+            type='font-awesome'
+            color='#015afc'
+            onPress={props.toggleModal} 
           />
         </View>
       </Card>
@@ -70,13 +81,13 @@ function RenderComentario(props) {
         <Text style={{ fontSize: 14 }}>{item.valoracion} Stars</Text>
         {!isNaN(fecha) && (
           <Text style={{ fontSize: 12 }}>
-            -- {item.autor},
+            -- {item.autor},{' '} 
             {new Intl.DateTimeFormat('es-ES', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
               day: '2-digit'
-            }).format(fecha)},
+            }).format(fecha)},{' '}
             {fecha.toLocaleTimeString('es-ES', {
               hour: '2-digit',
               minute: '2-digit',
@@ -104,6 +115,45 @@ function RenderComentario(props) {
 
 class DetalleExcursion extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      valoracion: 5,
+      autor: '',
+      comentario: '',
+      showModal: false
+    };
+  }
+  
+  toggleModal() {
+    this.setState({
+      showModal: !this.state.showModal,
+      valoracion: 5
+    });
+  }    
+
+  resetForm() {
+    this.setState({
+      valoracion: 5,
+      autor: '',
+      comentario: '',
+      showModal: false
+    });
+  }
+  
+  gestionarComentario() {
+    const { excursionId } = this.props.route.params;
+  
+    this.props.postComentario(
+      excursionId,
+      this.state.valoracion,
+      this.state.autor,
+      this.state.comentario
+    );
+  
+    this.resetForm();
+  }
+  
   marcarFavorito(excursionId) {
     this.props.postFavorito(excursionId);
   }
@@ -111,18 +161,66 @@ class DetalleExcursion extends Component {
   render() {
     const { excursionId } = this.props.route.params;
     const excursion = EXCURSIONES[+excursionId];
-    const comentariosFiltrados = COMENTARIOS.filter(
+    const comentariosFiltrados = this.props.comentarios.comentarios.filter(
       comentario => comentario.excursionId === excursionId
-    );
-
+    );    
+    
     return (
       <ScrollView>
         <RenderExcursion
           excursion={this.props.excursiones.excursiones[+excursionId]}
           favorita={this.props.favoritos.favoritos.some(el => el === excursionId)}
           onPress={() => this.marcarFavorito(excursionId)}
+          toggleModal={() => this.toggleModal()}
         />
         <RenderComentario comentarios={comentariosFiltrados} />
+
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.showModal}
+          onRequestClose={() => this.toggleModal()}
+        >
+          <ScrollView contentContainerStyle={{ paddingTop: 60 }}>
+            <View style={{ paddingHorizontal: 20 }}>
+              <View style={{ alignItems: 'center', marginBottom: 20 }}>
+                <Rating
+                  showRating
+                  type="star"
+                  imageSize={40}
+                  fractions={0}  
+                  startingValue={5}           
+                  onFinishRating={(valor) => this.setState({ valoracion: valor })}
+                />
+              </View>
+              <Input
+                placeholder="Autor"
+                leftIcon={{ type: 'font-awesome', name: 'user' }}
+                onChangeText={(autor) => this.setState({ autor })}
+                value={this.state.autor}
+              />
+              <Input
+                placeholder="Comentario"
+                leftIcon={{ type: 'font-awesome', name: 'comment' }}
+                onChangeText={(comentario) => this.setState({ comentario })}
+                value={this.state.comentario}
+              />
+              <Button
+                title="ENVIAR"
+                onPress={() => this.gestionarComentario()}
+                type="clear"
+                titleStyle={{ color: colorGaztaroaOscuro }}
+              />
+              <Button
+                title="CANCELAR"
+                onPress={() => this.resetForm()}
+                type="clear"
+                titleStyle={{ color: colorGaztaroaOscuro }}
+              />
+            </View>
+          </ScrollView>
+        </Modal>
+
       </ScrollView>
     );
   }
@@ -137,7 +235,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({ 
-  postFavorito: (excursionId) => dispatch(postFavorito(excursionId)) 
+  postFavorito: (excursionId) => dispatch(postFavorito(excursionId)), 
+  postComentario: (excursionId, valoracion, autor, comentario) =>
+    dispatch(postComentario(excursionId, valoracion, autor, comentario))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetalleExcursion);
